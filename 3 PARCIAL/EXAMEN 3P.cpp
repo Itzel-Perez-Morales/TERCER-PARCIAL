@@ -62,25 +62,28 @@ struct Boletos
 	Evento evento; // se referencia a que boleto va el evento -> se enlaza
 	float monto;
 
-	Boletos() {
-
+	Boletos() 
+	{
+		id_boleto = 0;
+		monto = 0;
 	}
 
-	Boletos(int id, Evento evento, float precioFinal) {
+	Boletos(int id, Evento evento, float precioFinal) 
+	{
 		this->id_boleto = id;
 		this->evento = evento;
 		this->monto = precioFinal;
 	}
 };
 
-Usuario usuarioRegistrado = Usuario(1, "1000001", "1234");
+Usuario usuarioRegistrado = Usuario(1, "1000001", "1234"); //Usuario preestablecido
 
-Evento evento1 = Evento(1, "1", "d1", "26/11/2023", "09:00:00", "UANL", 350.50, 100); // ORDENAR
-Evento evento2 = Evento(2, "2", "d2", "26/11/2023", "10:00:00", "Alameda", 100.00, 200);
-Evento evento3 = Evento(3, "3", "d3", "28/11/2023", "13:00:00", "Sendero", 20.0, 500);
-Evento evento4 = Evento(4, "4", "d4", "27/11/2023", "15:00:00", "UANL", 250.50, 90);
-Evento evento5 = Evento(5, "5", "d5", "27/11/2023", "17:00:00", "Plaza Sesamo", 630.50, 30);
-Evento evento6 = Evento(6, "6", "d6", "27/11/2023", "19:00:00", "Macroplaza", 550.50, 500);
+Evento evento1 = Evento(1, "Un Cuento de Navidad. EL MUSICAL", "Disfruta de la conmovedora historia para toda la familia", "26/11/2023", "09:00:00", "Auditorio Pabellón M", 350.50, 100); // ORDENAR
+Evento evento2 = Evento(2, "La Casetera", "Regresan a casa el grupo que recopila las mejores canciones que nos han hecho bailar y cantar durante años.", "26/11/2023", "17:00:00", "Alameda Mariano Escobedo", 100.00, 200);
+Evento evento3 = Evento(3, "El Show de Bely y Beto", "Bely y Beto regresan a los escenarios", "27/11/2023", "13:00:00", "Sendero Gral. Escobedo", 20.0, 500);
+Evento evento4 = Evento(4, "Enanitos Verdes", "¡Asegura tus boletos y prepárate para disfrutar de un gran concierto!", "27/11/2023", "15:00:00", "UANL", 250.50, 90);
+Evento evento5 = Evento(5, "90´s Pop Tour", "La máquina del tiempo está de regreso para ofrecer la experiencia del 90’s Pop Tour a otro nivel", "27/11/2023", "19:00:00", "Auditorio GNP Seguros", 630.50, 30);
+Evento evento6 = Evento(6, "La fábrica de Santa", "Una mágica historia navideña", "27/11/2023", "21:00:00", "Macroplaza", 550.50, 500);
 
 Evento eventos[6] = { evento1, evento2, evento3, evento4, evento5, evento6 };
 Evento eventoSeleccionado;
@@ -149,7 +152,7 @@ LRESULT CALLBACK PROCEventos(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		for (int i = 0; i < 6; i++)
 		{
 			string cadena;
-			cadena.append(eventos[i].lugar);
+			cadena.append(eventos[i].nombre);
 			cadena.append(" | ");
 			cadena.append(eventos[i].fecha);
 			cadena.append(" | ");
@@ -179,7 +182,7 @@ LRESULT CALLBACK PROCEventos(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			int indice = SendDlgItemMessage(hwnd, IDC_LISTBOX_Eventos, LB_GETCURSEL, 0, 0);
 			if (indice == -1)
 			{
-				MessageBox(hwnd, "No se ha seleccionado un evento", "(!) A D V E R T E N C I A", MB_ICONERROR | MB_OK);
+				MessageBox(hwnd, "No se ha seleccionado un evento", " A D V E R T E N C I A", MB_ICONERROR | MB_OK);
 				break;
 			}
 			eventoSeleccionado = eventos[indice];
@@ -187,6 +190,17 @@ LRESULT CALLBACK PROCEventos(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			ShowWindow(hCompraWnd, 1);
 		}
 		break;
+
+	case WM_CLOSE:
+	{
+		int MB = MessageBox(hwnd, "¿Desea salir?", "A D V E R T E N C I A ", MB_ICONEXCLAMATION | MB_OKCANCEL);
+		if (MB == IDOK)
+		{
+			DestroyWindow(hwnd);
+			PostQuitMessage(0);
+		}
+	}break;
+
 	}
 	return 0;
 }
@@ -246,7 +260,7 @@ LRESULT CALLBACK PROCCompra(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			contadorCompras++;
 			ShowWindow(hCompraWnd, 0);
 			ShowWindow(hAgendaWnd, 1);
-			MessageBox(hwnd, "La compra se ha realizado correctamente", "T A Q U I L L A", MB_ICONEXCLAMATION | MB_OK);
+			MessageBox(hwnd, "La compra se ha realizado correctamente", "T A Q U I L L A", MB_ICONINFORMATION | MB_OK);
 		}
 
 		if (LOWORD(wParam) == IDCANCEL_Compra)
@@ -256,6 +270,16 @@ LRESULT CALLBACK PROCCompra(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			MessageBox(hwnd, "La compra se ha cancelado", "A D V E R T E N C I A", MB_ICONWARNING | MB_OK);
 		}
 		break;
+
+	case WM_CLOSE:
+	{
+		int MB = MessageBox(hwnd, "¿Desea salir?", "A D V E R T E N C I A ", MB_ICONEXCLAMATION | MB_OKCANCEL);
+		if (MB == IDOK)
+		{
+			DestroyWindow(hwnd);
+			PostQuitMessage(0);
+		}
+	}break;
 	}
 	return 0;
 }
@@ -271,13 +295,12 @@ LRESULT CALLBACK PROCMisCompras(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		for (int i = 0; i < contadorCompras; i++)
 		{
 			string cadena;
-			cadena.append(compras[i].evento.lugar);
+			cadena.append(compras[i].evento.nombre);
 			cadena.append(" | ");
 			cadena.append(compras[i].evento.fecha);
 			cadena.append(" | ");
 			cadena.append(compras[i].evento.hora);
 			cadena.append(" | ");
-			cadena.append(to_string(compras[i].monto).c_str());
 
 
 			const char* valor = cadena.c_str();
@@ -303,6 +326,17 @@ LRESULT CALLBACK PROCMisCompras(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	}
 	break;
+
+	case WM_CLOSE:
+	{
+		int MB = MessageBox(hwnd, "¿Desea salir?", "A D V E R T E N C I A ", MB_ICONEXCLAMATION | MB_OKCANCEL);
+		if (MB == IDOK)
+		{
+			DestroyWindow(hwnd);
+			PostQuitMessage(0);
+		}
+	}break;
+
 	}
 	return 0;
 }
