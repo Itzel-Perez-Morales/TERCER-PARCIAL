@@ -88,9 +88,7 @@ Evento evento6 = Evento(6, "La fábrica de Santa", "Una mágica historia navideña"
 Evento eventos[6] = { evento1, evento2, evento3, evento4, evento5, evento6 };
 Evento eventoSeleccionado;
 
-Boletos compras[20];
-Boletos boletoSeleccionado;
-int contadorCompras = 0;
+Boletos compras[20] = 0;
 
 HWND hLogInWnd;
 HWND hCompraWnd;
