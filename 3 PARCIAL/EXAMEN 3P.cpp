@@ -137,6 +137,14 @@ LRESULT CALLBACK PROCLogIn(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 		}
 	}break;
+
+	case WM_CLOSE:
+	{
+		DestroyWindow(hwnd);
+		PostQuitMessage(0);
+	}break;
+
+
 	}
 	return 0;
 }
